@@ -1,0 +1,300 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Progress Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .text-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f0f0f0;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;  /* Added to ensure the button and input align properly */
+            justify-content: space-between;  /* Ensures button stays visible */
+        }
+
+        .text-bar input[type="text"] {
+            width: 80%;  /* Adjusted for better layout */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .text-bar button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;  /* Add space between input and button */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Health Progress Tracker</h1>
+</header>
+
+<div class="container">
+    <div class="main-content">
+        <div class="progress-tree">
+            <h2>Your Progress</h2>
+            <p>This is where the progress tree will be visualized. It will track your progress in different health aspects.</p>
+        </div>
+
+        <div class="text-bar">
+            <input type="text" id="user-query" placeholder="Respond to AI...">
+            <button onclick="callBedrock()">Send</button>
+        </div>
+    </div>
+</div> 
+
+
+
+<script>
+    async function callBedrock() {
+        const userQuery = document.getElementById('user-query').value;
+
+        const response = await fetch('http://localhost:8080/call_bedrock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_response: userQuery  // Send the user's response in the body
+            }),
+        });
+
+        const data = await response.json();
+        console.log(data); // Display the data in the UI
+        alert(data.model_output || "Response not available");
+    }
+</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Progress Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background: linear-gradient(to right, rgba(76, 175, 80, 1), rgba(76, 175, 80, 0));
+            color: white;
+            padding: 15px;
+            margin: 0;
+            margin-left: 25px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .main-content {
+            margin-top: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+            margin-left: 20px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+        }
+
+        /* Hobbies and Interests section */
+        .hobbies-section {
+            margin-top: 20px;
+            text-align: center; /* Center the text */
+        }
+
+        .hobbies-section label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .hobbies-section input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px; /* Space between the text box and the button */
+        }
+
+        /* Fixed bottom bar for input and button */
+        .text-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .text-bar input[type="text"] {
+            width: 75%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .text-bar button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        .text-bar button:hover {
+            background-color: #45a049;
+        }
+
+        /* Side task bar */
+        .side-task-bar {
+            position: fixed;
+            top: 0;
+            left: -200px; /* Initially hidden, off the screen */
+            width: 200px;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            transition: left 0.3s; /* Smooth transition */
+        }
+
+        .side-task-bar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .side-task-bar ul li {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        /* Detect when the mouse is near the left edge */
+        .detect-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px; /* Small area near the edge to detect the mouse */
+            height: 100%;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Witted Wellness</h1>
+</header>
+
+<div class="container">
+    <div class="main-content">
+        <div class="progress-tree">
+            <h2>Your Progress</h2>
+            <p>This is where the progress tree will be visualized. It will track your progress in different health aspects.</p>
+        </div>
+
+        <!-- Hobbies and Interests Section -->
+        <div class="hobbies-section">
+            <label for="hobbies-input">What are your hobbies and interests?</label>
+            <input type="text" id="hobbies-input" placeholder="Enter your hobbies and interests here...">
+        </div>
+    </div>
+</div>
+
+<!-- Side task bar -->
+<div class="side-task-bar" id="sideTaskBar">
+    <h3>Tasks</h3>
+    <ul>
+        <li>Home</li>
+        <li>Mental</li>
+        <li>Physical</li>
+    </ul>
+</div>
+
+<!-- Hidden area to detect mouse proximity for showing the task bar -->
+<div class="detect-area" onmouseenter="showSideTaskBar()" onmouseleave="hideSideTaskBar()"></div>
+
+<!-- Fixed text input bar at the bottom -->
+<div class="text-bar">
+    <input type="text" id="user-query" placeholder="Respond to AI...">
+    <button onclick="callBedrock()">Send</button>
+</div>
+
+<script>
+    // Show the side task bar
+    function showSideTaskBar() {
+        document.getElementById('sideTaskBar').style.left = '0';
+    }
+
+    // Hide the side task bar
+    function hideSideTaskBar() {
+        document.getElementById('sideTaskBar').style.left = '-200px';
+    }
+
+    // Function to send data to server
+    async function callBedrock() {
+        const userQuery = document.getElementById('user-query').value;
+
+        const response = await fetch('http://localhost:8080/call_bedrock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_response: userQuery
+            }),
+        });
+
+        const data = await response.json();
+        console.log(data); 
+        alert(data.model_output || "Response not available");
+    }
+</script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Progress Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 20%;
+            background-color: #333;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .progress-tree {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .text-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f0f0f0;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .text-bar input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .text-bar button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .inquiry-bubble {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Health Progress Tracker</h1>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <h2>Health Aspects</h2>
+        <ul>
+            <li>Mental Health</li>
+            <li>Emotional Health</li>
+            <li>Social Health</li>
+            <li>Physical Health</li>
+            <li>Physical Activity</li>
+            <li>Sleep</li>
+            <li>Other</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="progress-tree">
+            <h2>Your Progress</h2>
+            <p>This is where the progress tree will be visualized. It will track your progress in different health aspects.</p>
+        </div>
+
+        <div class="text-bar">
+            <input type="text" placeholder="Respond to AI...">
+            <button>Send</button>
+        </div>
+    </div>
+</div>
+
+<div class="inquiry-bubble">
+    <p>How are you feeling today?</p>
+</div>
+
+</body>
+</html>
