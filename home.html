@@ -21,17 +21,17 @@
             position: relative; /* Allow absolute positioning of the toggle button */
         }
     
-        /* Streak counter style */
-        .streak-counter {
-            position: absolute; /* Absolute positioning */
-            top: 15px; /* Align with header padding */
-            right: 20px; /* Adjust to your liking */
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-            color: white;
-            padding: 5px 10px;
+        /* Water counter style */
+        #water-counter {
+            position: absolute; /* Position the counter in the top right corner */
+            top: 20px;         /* Adjust the vertical position */
+            right: 20px;       /* Adjust the horizontal position */
+            background-color: rgba(255, 255, 255, 0.8); /* Light background */
+            padding: 10px;
             border-radius: 5px;
-            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
         }
+
 
         .toggle-button {
             position: absolute;
@@ -106,7 +106,7 @@
         .side-task-bar {
             position: fixed;
             top: 0;
-            left: -600px; /* Initially hidden, off the screen */
+            left: -200px; /* Initially hidden, off the screen */
             width: 200px;
             height: 100%;
             background-color: #333;
@@ -124,6 +124,19 @@
             padding: 10px;
             border-bottom: 1px solid #444;
             cursor: pointer; /* Indicate clickable items */
+        }
+
+        .side-task-bar ul li a {
+            color: white; /* Default color */
+            text-decoration: none;
+        }
+
+        .side-task-bar ul li a:visited {
+            color: yellow; /* Bright color after the link is clicked */
+        }
+
+        .side-task-bar ul li a:hover {
+            text-decoration: underline; /* Underline on hover */
         }
 
         /* Additional styling for the input sections */
@@ -192,22 +205,31 @@
 
 <header>
     <button class="toggle-button" onclick="toggleSidebar()">☰</button> <!-- Toggle button -->
-    <h1>Witted Wellness</h1>
-    <div class="streak-counter" id="streakCounter">Streak: 0</div> <!-- Streak counter -->
+    <h1>Wellness Wave</h1>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Retrieve the water amount from localStorage
+            let waterAmount = parseInt(localStorage.getItem('waterAmount')) || 0;
+            document.getElementById('waterCounter').textContent = waterAmount; // Update the displayed water amount
+        });
+    </script>
+    <div id="water-counter">
+        <h2>Water Amount: <span id="waterCounter">0</span></h2>
+    </div>
 </header>
 
 <div class="container">
     <div class="main-content">
-        <h2>Your Progress</h2>
-        <p>This is where the progress tree will be visualized. It will track your progress in different health aspects.</p>
+        <h2>Personal Wellbeing</h2>
+        <p>Feel free to provide info on your habits. Press 'Submit' to receive feedback..</p>
 
         <!-- Text boxes for user input -->
         <div class="input-section">
             <textarea placeholder="What is your typical daily routine?"></textarea>
             <textarea placeholder="What changes do you want?"></textarea>
-            <textarea placeholder="What is your ideal life?"></textarea>
-            <textarea placeholder="What percent of 100 do you want to be mental?"></textarea>
-            <textarea placeholder="What percent of 100 do you want to be physical?"></textarea>
+            <textarea placeholder="Who do you hang out with?"></textarea>
+            <textarea placeholder="What are your hobbies or interest?"></textarea>
+            <textarea placeholder="How do you feel?"></textarea>
         </div>
 
         <!-- Submit button for user input -->
@@ -228,16 +250,16 @@
     <h3>Tasks</h3>
     <ul>
         <li><a href="{{ url_for('index') }}">Home</a></li>
-        <li><a href="{{ url_for('mental') }}">Mental</a></li>
-        <li><a href="{{ url_for('physical') }}">Physical</a></li>
+        <li><a href="{{ url_for('checklist') }}">Activities</a></li>
+        <li><a href="{{ url_for('physical') }}">Progress</a></li>
     </ul>
 </div>
 
 <!-- Fixed text input bar at the bottom -->
-<div class="text-bar">
+<!-- <div class="text-bar">
     <input type="text" id="user-query" placeholder="Respond to AI...">
     <button onclick="callBedrock()">Send</button>
-</div>
+</div> -->
 
 <script>
     // Function to toggle the sidebar visibility
@@ -283,7 +305,7 @@
             Physical Health Focus: ${physicalPercent}%
 
             Please provide a list of mental and physical activities that could help
-            the user achieve their ideal life. Return the list in **JSON format only**, 
+            the user achieve their ideal life. Each line of the list should be brief. Remember the user's prompt and your response for the next 24 hours. Return the list in **JSON format only**, 
             without any additional text or explanations like this:
             {
                 "mental_activities": [

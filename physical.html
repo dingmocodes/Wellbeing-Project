@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physical Health</title>
+    <title>Progress Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,16 +18,249 @@
         .container {
             padding: 20px;
         }
+        .progress-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 20px;
+            height: 30px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%; /* Start at 0% */
+            background-color: #4CAF50; /* Green color */
+            border-radius: 5px;
+            transition: width 0.5s; /* Smooth transition */
+        }
+
+        .tree-image {
+            width: 275px; /* Adjust width as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin-top: 20px; /* Spacing above the tree image */
+        }
+
+        .report-container {
+            display: flex; /* Use flexbox for layout */
+            justify-content: space-between; /* Space between tree and report */
+        }
+
+        .activities-report {
+            width: 60%; /* Adjust width as needed */
+        }
+
+        .tree-section {
+            width: 35%; /* Adjust width as needed */
+            text-align: center; /* Center the tree image */
+        }
+
+        .summary {
+            margin-top: 20px;
+            background-color: #f3f3f3;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left; /* Align text to the left */
+        }
+
+        ul {
+            list-style-type: none; /* Remove bullet points */
+        }
+        /* Style for buttons */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+        /* Center the buttons and give them space */
+        .button-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            align-items: start; /* Center horizontally */
+            gap: 15px; /* Space between buttons */
+            margin-top: 20px; /* Add spacing above the buttons */
+        }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>Physical Health</h1>
+        <h1>Progress</h1>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Retrieve the water amount from localStorage
+                let waterAmount = parseInt(localStorage.getItem('waterAmount')) || 0;
+                document.getElementById('waterCounter').textContent = waterAmount; // Update the displayed water amount
+            });
+        </script>
     </header>
     <div class="container">
-        <h2>Welcome to the Physical Health Page</h2>
-        <p>This page will provide resources and information about physical health.</p>
+        <h2>Welcome to the Progress Page</h2>
+        <p>This page will provide resources and information about your progress.</p>
         <a href="{{ url_for('index') }}">Go back to Home</a>
     </div>
+
+    <div class="report-container">
+        <div class="tree-section">
+            <!-- Image to display progress -->
+            <img src="{{ url_for('static', filename='tree_unhealthy1.png') }}" id="treeImage" alt="Tree" class="tree-image">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <h2 id="progressText">0/50</h2> <!-- Display progress text -->
+            <!-- <button id="waterButton">Transfer 10 Waters</button> -->
+        </div>
+
+        <div class="activities-report">
+            <h2>Completed Activities</h2>
+            <ul id="completedActivities"></ul>
+
+            <h2>Incomplete Activities</h2>
+            <ul id="incompleteActivities"></ul>
+        </div>
+    </div>
+
+    <!-- <button id="generateReportButton">Generate Progress Summary</button>  -->
+    <div class="button-container">
+        <button id="waterButton">Transfer 10 Waters</button> <!-- Button to simulate transferring water -->
+        <button id="generateReportButton">Generate Progress Summary</button> <!-- Button to generate AI report -->
+    </div>
+    
+    <div class="summary" id="summaryOutput"></div> <!-- Area to display AI summary -->
+
+    <script>
+        // Initialize or retrieve the water amount from localStorage
+        let waterAmount = parseInt(localStorage.getItem('waterAmount')) || 0;
+        let progress = 0; // Initialize the progress for the tree
+
+        // Array of tree image variations
+        const treeVariations = [
+            "{{ url_for('static', filename='tree_unhealthy1.png') }}", // Initial tree state (dead)
+            "{{ url_for('static', filename='tree_h1.png') }}", // Next state (kinda not dead)
+            "{{ url_for('static', filename='tree_rh1.png') }}"  // Final state (alive and well)
+        ];
+
+        // Function to update progress
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const treeImage = document.getElementById('treeImage');
+
+            // Update the progress bar and text
+            progressBar.style.width = `${(progress / 50) * 100}%`; // Update width
+            progressText.textContent = `${progress}/50`; // Update text
+
+            // Check if the progress has reached 50
+            if (progress >= 50) {
+                // Change the tree image based on current progress
+                const treeIndex = Math.min(Math.floor(progress / 50), treeVariations.length - 1);
+                treeImage.src = treeVariations[treeIndex]; // Change the tree image
+
+                // Reset progress after reaching 50
+                alert('The tree has been fully watered!');
+                progress = 0; // Reset progress
+                localStorage.setItem('treeProgress', progress); // Update localStorage
+                updateProgress(); // Update the UI again
+            }
+        }
+
+        // Button event listener for transferring water
+        document.getElementById('waterButton').addEventListener('click', function() {
+            if (waterAmount >= 10) {
+                // Deduct water and increase progress
+                waterAmount -= 10; // Deduct water
+                localStorage.setItem('waterAmount', waterAmount); // Update localStorage
+                progress += 10; // Increase progress
+                localStorage.setItem('treeProgress', progress); // Store the tree progress
+                updateProgress(); // Update the progress bar
+            } else {
+                alert("Not enough water! You need at least 10 waters to water the tree.");
+            }
+        });
+
+        // Initial progress retrieval
+        progress = parseInt(localStorage.getItem('treeProgress')) || 0; // Retrieve progress from localStorage
+        updateProgress(); // Update the progress display on page load
+
+        // Retrieve the JSON data from localStorage for activity report
+        const storedData = localStorage.getItem('myData');
+        const completedActivitiesList = document.getElementById('completedActivities');
+        const incompleteActivitiesList = document.getElementById('incompleteActivities');
+
+        if (storedData) {
+            // Parse the JSON data
+            const jsonData = JSON.parse(storedData);
+            const modelOutputString = jsonData.model_output;
+            const parsedData = JSON.parse(modelOutputString);
+
+            // Combine mental and physical activities into a single array
+            const allActivities = [
+                ...parsedData.mental_activities,
+                ...parsedData.physical_activities
+            ];
+
+            allActivities.forEach(activity => {
+                // Check if the activity is completed
+                const isCompleted = localStorage.getItem(activity) === 'true';
+
+                // Create a list item
+                const li = document.createElement('li');
+                li.textContent = activity;
+
+                if (isCompleted) {
+                    completedActivitiesList.appendChild(li); // Append to completed activities
+                } else {
+                    incompleteActivitiesList.appendChild(li); // Append to incomplete activities
+                }
+            });
+        } else {
+            console.log('No task data found in localStorage');
+            completedActivitiesList.innerHTML = '<li>No activities completed.</li>';
+            incompleteActivitiesList.innerHTML = '<li>No activities available.</li>';
+        }
+
+        // Function to submit user info and get AI progress report
+        document.getElementById('generateReportButton').addEventListener('click', async function() {
+            // Retrieve completed and incomplete activities
+            const completedActivities = Array.from(completedActivitiesList.children).map(li => li.textContent);
+            const incompleteActivities = Array.from(incompleteActivitiesList.children).map(li => li.textContent);
+
+            // Construct the AI prompt
+            const prompt = `
+                Based on the user's progress, here are the activities:
+                Completed Activities: ${completedActivities.join(', ')}
+                Incomplete Activities: ${incompleteActivities.join(', ')}
+
+                Please provide a 3-4 sentence summary of your progress and suggest how you can continue to improve.
+                Return the summary in a clear format, without any additional text or explanations.
+            `;
+
+            // Send the prompt to the AI
+            const response = await fetch('http://localhost:8080/call_bedrock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_response: prompt
+                }),
+            });
+
+            const data = await response.json();
+
+            // Display the summary in the summary output area
+            const summaryOutput = document.getElementById('summaryOutput');
+            summaryOutput.textContent = data.model_output || "Response not available"; // Update summary display
+        });
+    </script>
+
 </body>
 </html>
