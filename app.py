@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS  # Import Flask-CORS
-import boto3, json
+import boto3, json, os
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -10,10 +10,13 @@ CORS(app)  # This enables CORS for all routes
 app = Flask(__name__, static_folder='static', template_folder='.')
 CORS(app)  # Enable CORS for the whole app
 
+a_key = os.environ.get('A_KEY')
+sa_key = os.environ.get('SA_KEY')
+
 # Create a Bedrock client with a specified AWS region
 client = boto3.client('bedrock-runtime', region_name='us-west-2',
-                      aws_access_key_id='acess_key', 
-                      aws_secret_access_key='secret_access_key', 
+                      aws_access_key_id=a_key, 
+                      aws_secret_access_key=sa_key, 
                       )
 
 # Bedrock model configuration
@@ -24,6 +27,18 @@ content_type_header = "application/json"
 @app.route('/')
 def index():
     return render_template('home.html')
+
+@app.route('/mental')
+def mental():
+    return render_template('mental.html')
+
+@app.route('/physical')
+def physical():
+    return render_template('physical.html')
+
+@app.route('/checklist')
+def checklist():
+    return render_template('checklist.html')
 
 @app.route('/wellness_bot', methods=['POST'])
 def wellness_bot():

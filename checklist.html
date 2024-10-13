@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Health</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Activities</h1>
+    </header>
+    <div class="container">
+        <h2>Introducing your Personalized Activities</h2>
+        <a href="{{ url_for('index') }}">Go back to Home</a>
+    </div>
+
+    <div class="activities-section">
+        <h2>Mental Activities</h2>
+        <ul id="mentalActivitiesList"></ul>
+    </div>
+
+    <div class="activities-section">
+        <h2>Physical Activities</h2>
+        <ul id="physicalActivitiesList"></ul>
+    </div>
+
+    <script>
+
+        function createCheckbox(activity) {
+            // Create a list item (li) element
+            const li = document.createElement('li');
+            
+            // Create a checkbox input element
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            
+            // Create a label for the checkbox
+            const label = document.createElement('label');
+            label.textContent = activity;  // Use the activity as the label text
+            
+            // Append the checkbox and label to the list item (li)
+            li.appendChild(checkbox);
+            li.appendChild(label);
+            
+            return li;
+        }
+
+        // Retrieve the JSON data from localStorage
+        const storedData = localStorage.getItem('myData');
+        if (storedData) {
+            // Parse the JSON data
+            const jsonData = JSON.parse(storedData);
+
+            const modelOutputString = jsonData.model_output;
+
+            // Parse the string to get the actual JSON data
+            const parsedData = JSON.parse(modelOutputString);
+
+            // Now parsedData contains the mental_activities and physical_activities arrays
+            console.log(parsedData.mental_activities);  // Should print the mental activities array
+            console.log(parsedData.physical_activities);  // Should print the physical activities array
+
+            // Render mental activities
+            const mentalActivitiesList = document.getElementById('mentalActivitiesList');
+            parsedData.mental_activities.forEach(activity => {
+                const li = createCheckbox(activity);
+                mentalActivitiesList.appendChild(li);
+            });
+
+            // Render physical activities
+            const physicalActivitiesList = document.getElementById('physicalActivitiesList');
+            parsedData.physical_activities.forEach(activity => {
+                const li = createCheckbox(activity);
+                physicalActivitiesList.appendChild(li);
+            });
+        } else {
+            console.log('No task data found in localStorage');
+        }
+    </script>
+</body>
+</html>

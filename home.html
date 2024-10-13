@@ -9,15 +9,40 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            background: #EDE1D4;
         }
 
         header {
-            background: linear-gradient(to right, rgba(76, 175, 80, 1), rgba(76, 175, 80, 0));
+            background: linear-gradient(to right, rgba(0, 153, 76, 1), rgba(76, 175, 80, 0.5));
             color: white;
             padding: 15px;
             margin: 0;
             text-align: center;
+            position: relative; /* Allow absolute positioning of the toggle button */
+        }
+    
+        /* Streak counter style */
+        .streak-counter {
+            position: absolute; /* Absolute positioning */
+            top: 15px; /* Align with header padding */
+            right: 20px; /* Adjust to your liking */
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .toggle-button {
+            position: absolute;
+            left: 250px; /* Distance from the left edge */
+            top: 50%; /* Centered vertically */
+            transform: translateY(-50%); /* Adjust for the button height */
+            background: transparent; /* Transparent background */
+            border: none; /* No border */
+            color: white; /* White text color */
+            font-size: 20px; /* Increase font size */
+            cursor: pointer; /* Pointer cursor on hover */
         }
 
         .container {
@@ -81,7 +106,7 @@
         .side-task-bar {
             position: fixed;
             top: 0;
-            left: -200px; /* Initially hidden, off the screen */
+            left: -600px; /* Initially hidden, off the screen */
             width: 200px;
             height: 100%;
             background-color: #333;
@@ -101,16 +126,6 @@
             cursor: pointer; /* Indicate clickable items */
         }
 
-        /* Detect when the mouse is near the left edge */
-        .detect-area {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100px; /* Small area near the edge to detect the mouse */
-            height: 100%;
-            z-index: 10;
-        }
-
         /* Additional styling for the input sections */
         .input-section {
             margin: 20px 0;
@@ -127,6 +142,7 @@
             border-radius: 4px;
             margin-bottom: 10px;
             font-size: 16px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5); /* Black shadow */
         }
 
         /* Submit button section */
@@ -175,7 +191,9 @@
 <body>
 
 <header>
+    <button class="toggle-button" onclick="toggleSidebar()">☰</button> <!-- Toggle button -->
     <h1>Witted Wellness</h1>
+    <div class="streak-counter" id="streakCounter">Streak: 0</div> <!-- Streak counter -->
 </header>
 
 <div class="container">
@@ -209,14 +227,11 @@
 <div class="side-task-bar" id="sideTaskBar">
     <h3>Tasks</h3>
     <ul>
-        <li onclick="location.href='home.html'">Home</li>
-        <li onclick="location.href='mental.html'">Mental</li>
-        <li onclick="location.href='physical.html'">Physical</li>
+        <li><a href="{{ url_for('index') }}">Home</a></li>
+        <li><a href="{{ url_for('mental') }}">Mental</a></li>
+        <li><a href="{{ url_for('physical') }}">Physical</a></li>
     </ul>
 </div>
-
-<!-- Hidden area to detect mouse proximity for showing the task bar -->
-<div class="detect-area" onmouseenter="showSideTaskBar()" onmouseleave="hideSideTaskBar()"></div>
 
 <!-- Fixed text input bar at the bottom -->
 <div class="text-bar">
@@ -225,14 +240,10 @@
 </div>
 
 <script>
-    // Show the side task bar
-    function showSideTaskBar() {
-        document.getElementById('sideTaskBar').style.left = '0';
-    }
-
-    // Hide the side task bar
-    function hideSideTaskBar() {
-        document.getElementById('sideTaskBar').style.left = '-200px';
+    // Function to toggle the sidebar visibility
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sideTaskBar');
+        sidebar.style.left = sidebar.style.left === '0px' ? '-200px' : '0px';
     }
 
     // Function to send data to server
@@ -297,33 +308,15 @@
         });
 
         const data = await response.json();
+
         console.log(data); 
         alert(data.model_output || "Response not available");
 
-        // Prepare the checklist items
-        const checklistItems = [
-            `Daily Routine: ${dailyRoutine}`,
-            `Desired Changes: ${desiredChanges}`,
-            `Ideal Life: ${idealLife}`,
-            `Mental Percent: ${mentalPercent}%`,
-            `Physical Percent: ${physicalPercent}%`
-        ];
-
-        // Clear existing checklist
-        const checklist = document.getElementById('checklistItems');
-        checklist.innerHTML = '';
-
-        // Append new checklist items
-        checklistItems.forEach(item => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<input type="checkbox"> ${item}`;
-            checklist.appendChild(listItem);
-        });
-
-        // Show the checklist section
-        document.getElementById('checklist').style.display = 'block';
+        localStorage.setItem('myData', JSON.stringify(data));
+        window.location.href = 'checklist';
     }
 </script>
 
 </body>
 </html>
+
