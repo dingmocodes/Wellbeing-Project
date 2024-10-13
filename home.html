@@ -1,90 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Progress Tracker</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        .text-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #f0f0f0;
-            padding: 10px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;  /* Added to ensure the button and input align properly */
-            justify-content: space-between;  /* Ensures button stays visible */
-        }
-
-        .text-bar input[type="text"] {
-            width: 80%;  /* Adjusted for better layout */
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .text-bar button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-left: 10px;  /* Add space between input and button */
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <h1>Health Progress Tracker</h1>
-</header>
-
-<div class="container">
-    <div class="main-content">
-        <div class="progress-tree">
-            <h2>Your Progress</h2>
-            <p>This is where the progress tree will be visualized. It will track your progress in different health aspects.</p>
-        </div>
-
-        <div class="text-bar">
-            <input type="text" id="user-query" placeholder="Respond to AI...">
-            <button onclick="callBedrock()">Send</button>
-        </div>
-    </div>
-</div> 
-
-
-
-<script>
-    async function callBedrock() {
-        const userQuery = document.getElementById('user-query').value;
-
-        const response = await fetch('http://localhost:8080/call_bedrock', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_response: userQuery  // Send the user's response in the body
-            }),
-        });
-
-        const data = await response.json();
-        console.log(data); // Display the data in the UI
-        alert(data.model_output || "Response not available");
-    }
-</script>
-
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -349,6 +262,44 @@
         const mentalPercent = document.querySelectorAll('.input-section textarea')[3].value;
         const physicalPercent = document.querySelectorAll('.input-section textarea')[4].value;
 
+        const prompt = `
+            Given the following information:
+            
+            Daily Routine: ${dailyRoutine}
+            Desired Changes: ${desiredChanges}
+            Ideal Life: ${idealLife}
+            Mental Health Focus: ${mentalPercent}%
+            Physical Health Focus: ${physicalPercent}%
+
+            Please provide a list of mental and physical activities that could help
+            the user achieve their ideal life. Return the list in **JSON format only**, 
+            without any additional text or explanations like this:
+            {
+                "mental_activities": [
+                    "Activity Name: Brief description of what the activity involves.",
+                    "Another Activity(s): Brief description explaining its benefits."
+                ],
+                "physical_activities": [
+                    "Physical Activity Name: A short explanation of how to perform the activity.",
+                    "Another Physical Activity(s): Description of the physical benefits and any necessary details."
+                ]
+            }
+        `;
+
+        const response = await fetch('http://localhost:8080/call_bedrock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_response: prompt
+            }),
+        });
+
+        const data = await response.json();
+        console.log(data); 
+        alert(data.model_output || "Response not available");
+
         // Prepare the checklist items
         const checklistItems = [
             `Daily Routine: ${dailyRoutine}`,
@@ -376,13 +327,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-

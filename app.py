@@ -12,7 +12,7 @@ CORS(app)  # Enable CORS for the whole app
 
 # Create a Bedrock client with a specified AWS region
 client = boto3.client('bedrock-runtime', region_name='us-west-2',
-                      aws_access_key_id='access_key', 
+                      aws_access_key_id='acess_key', 
                       aws_secret_access_key='secret_access_key', 
                       )
 
@@ -23,7 +23,7 @@ content_type_header = "application/json"
 
 @app.route('/')
 def index():
-    return render_template('website.html')
+    return render_template('home.html')
 
 @app.route('/wellness_bot', methods=['POST'])
 def wellness_bot():
