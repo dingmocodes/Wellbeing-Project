@@ -244,7 +244,7 @@
             `;
 
             // Send the prompt to the AI
-            const response = await fetch('http://localhost:8080/call_bedrock', {
+            const response = await fetch('/call_bedrock', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
