@@ -168,13 +168,12 @@
         .side-task-bar {
             position: fixed;
             top: 0;
-            left: -200px; /* Initially hidden, off the screen */
+            left: 0; /* Positioning fixed to visible */
             width: 200px;
             height: 100%;
             background-color: #333;
             color: white;
             padding: 15px;
-            transition: left 0.3s; /* Smooth transition */
         }
 
         .side-task-bar ul {
@@ -185,77 +184,15 @@
         .side-task-bar ul li {
             padding: 10px;
             border-bottom: 1px solid #444;
-            cursor: pointer; /* Indicate clickable items */
         }
 
-        /* Detect when the mouse is near the left edge */
-        .detect-area {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100px; /* Small area near the edge to detect the mouse */
-            height: 100%;
-            z-index: 10;
-        }
-
-        /* Additional styling for the input sections */
-        .input-section {
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .input-section textarea {
-            width: 90%;
-            height: 60px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        /* Submit button section */
-        .submit-section {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .submit-section button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #4CAF50;
+        .side-task-bar ul li a {
             color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
+            text-decoration: none;
         }
 
-        .submit-section button:hover {
-            background-color: #45a049;
-        }
-
-        /* Checklist section */
-        .checklist {
-            margin-top: 20px;
-            display: none; /* Hidden by default */
-        }
-
-        .checklist ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .checklist ul li {
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .checklist ul li input {
-            margin-right: 10px;
+        .side-task-bar ul li a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -293,17 +230,14 @@
 </div>
 
 <!-- Side task bar -->
-<div class="side-task-bar" id="sideTaskBar">
+<div class="side-task-bar">
     <h3>Tasks</h3>
     <ul>
-        <li onclick="location.href='home.html'">Home</li>
-        <li onclick="location.href='mental.html'">Mental</li>
-        <li onclick="location.href='physical.html'">Physical</li>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="mental.html">Mental</a></li>
+        <li><a href="physical.html">Physical</a></li>
     </ul>
 </div>
-
-<!-- Hidden area to detect mouse proximity for showing the task bar -->
-<div class="detect-area" onmouseenter="showSideTaskBar()" onmouseleave="hideSideTaskBar()"></div>
 
 <!-- Fixed text input bar at the bottom -->
 <div class="text-bar">
@@ -312,16 +246,6 @@
 </div>
 
 <script>
-    // Show the side task bar
-    function showSideTaskBar() {
-        document.getElementById('sideTaskBar').style.left = '0';
-    }
-
-    // Hide the side task bar
-    function hideSideTaskBar() {
-        document.getElementById('sideTaskBar').style.left = '-200px';
-    }
-
     // Function to send data to server
     async function callBedrock() {
         const userQuery = document.getElementById('user-query').value;
@@ -376,6 +300,7 @@
 
 </body>
 </html>
+
 
 
 
